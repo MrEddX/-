@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <title>Касов Калкулатор Pro - Смени</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #334155;
+            --accent: #3b82f6;
+            --border: #e2e8f0;
+            --header-bg: #ffffff;
+            --hover-bg: #f1f5f9;
+            --shadow: 0 10px 40px rgba(0,0,0,0.06);
+            --btn-save-bg: #dcfce7;
+            --btn-save-text: #16a34a;
+            --btn-save-border: #bbf7d0;
+            --btn-clear-bg: #fee2e2;
+            --btn-clear-text: #dc2626;
+            --btn-clear-border: #fecaca;
+            --operator-bg: #f8fafc;
+        }
+
+        .dark-mode {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --accent: #60a5fa;
+            --border: #334155;
+            --header-bg: #1e293b;
+            --hover-bg: #2d3a4f;
+            --shadow: 0 10px 40px rgba(0,0,0,0.3);
+            --btn-save-bg: #14532d;
+            --btn-save-text: #86efac;
+            --btn-save-border: #166534;
+            --btn-clear-bg: #7f1d1d;
+            --btn-clear-text: #fca5a5;
+            --btn-clear-border: #991b1b;
+            --operator-bg: #1e293b;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            transition: background-color 0.3s ease, color 0.2s ease;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            padding: 8px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            color: var(--text);
+            z-index: 1001;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            background: var(--hover-bg);
+        }
+
+        .theme-toggle .sun { display: inline; }
+        .theme-toggle .moon { display: none; }
+        .dark-mode .theme-toggle .sun { display: none; }
+        .dark-mode .theme-toggle .moon { display: inline; }
+
+        .page-calc {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .app-container {
+            background: var(--card);
+            padding: 25px 35px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 1100px;
+            border: 1px solid var(--border);
+            transition: background-color 0.3s ease, border-color 0.2s ease;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        .dark-mode header {
+            border-bottom: 2px solid var(--border);
+        }
+
+        #clock {
+            font-size: 1.4em;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        /* Поле за оператор - по-ненатрапчиво */
+        .operator-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 8px 12px;
+            background: var(--operator-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+        }
+
+        .operator-row label {
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #64748b;
+        }
+
+        .operator-row input {
+            width: 200px;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-weight: normal;
+            font-size: 0.95em;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .operator-row input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .shift-badge {
+            background: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.3fr;
+            gap: 25px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .col-header {
+            font-size: 0.75em;
+            font-weight: 800;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .label {
+            flex: 1;
+            font-weight: 700;
+            font-size: 0.95em;
+        }
+
+        input {
+            width: 85px;
+            padding: 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            background: var(--bg);
+            color: var(--text);
+            transition: all 0.2s ease;
+        }
+
+        .dark-mode input {
+            border: 1px solid var(--border);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: #f0f7ff;
+        }
+
+        .dark-mode input:focus {
+            background: var(--hover-bg);
+        }
+
+        .b500 { border-left: 6px solid #a29bfe; background: #f5f3ff; }
+        .b200 { border-left: 6px solid #fbc531; background: #fffbeb; }
+        .b100 { border-left: 6px solid #4cd137; background: #f0fdf4; }
+        .b50 { border-left: 6px solid #e67e22; background: #fff7ed; }
+        .b20 { border-left: 6px solid #3498db; background: #eff6ff; }
+        .b10 { border-left: 6px solid #e84118; background: #fef2f2; }
+        .b5 { border-left: 6px solid #95a5a6; background: #f8fafc; }
+        .gold { border-left: 6px solid #d4af37; background: #fffdf0; }
+        .copper { border-left: 6px solid #b87333; background: #fff7f2; }
+
+        .dark-mode .b500 { background: #2d2b4a; }
+        .dark-mode .b200 { background: #3d3a24; }
+        .dark-mode .b100 { background: #1d3a2a; }
+        .dark-mode .b50 { background: #3d3422; }
+        .dark-mode .b20 { background: #1d3347; }
+        .dark-mode .b10 { background: #3d2427; }
+        .dark-mode .b5 { background: #2d3338; }
+        .dark-mode .gold { background: #3d3925; }
+        .dark-mode .copper { background: #3d2e26; }
+
+        .right-panel {
+            background: #f8fafc;
+            padding: 18px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+        }
+
+        .dark-mode .right-panel {
+            background: var(--card);
+        }
+
+        .extra-box { margin-bottom: 12px; }
+        .special-label {
+            font-size: 0.75em;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .full-in {
+            width: 100% !important;
+            box-sizing: border-box;
+            padding: 10px;
+            font-size: 1.3em;
+        }
+
+        .summary-footer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #f1f5f9;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .dark-mode .summary-footer {
+            border-top: 2px solid var(--border);
+        }
+
+        .stat-card {
+            padding: 12px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            text-align: center;
+        }
+
+        .res-val {
+            font-size: 1.8em;
+            font-weight: 900;
+        }
+
+        .diff-pos { color: #16a34a; }
+        .diff-neg { color: #dc2626; }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            border: 1px solid transparent;
+            transition: 0.2s;
+            font-size: 0.9em;
+        }
+
+        .btn-save {
+            background: var(--btn-save-bg);
+            color: var(--btn-save-text);
+            border-color: var(--btn-save-border);
+        }
+
+        .btn-clear {
+            background: var(--btn-clear-bg);
+            color: var(--btn-clear-text);
+            border-color: var(--btn-clear-border);
+        }
+
+        #help-modal, #toast {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            border: 2px solid var(--accent);
+            color: var(--text);
+        }
+
+        #toast {
+            padding: 20px 40px;
+            border-color: #16a34a;
+            color: #16a34a;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .dark-mode #toast {
+            background: var(--card);
+        }
+
+        .kb-key {
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 5px;
+            border: 1px solid #cbd5e1;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .dark-mode .kb-key {
+            background: var(--hover-bg);
+            border-color: var(--border);
+        }
+
+        .nav-hint {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            background: var(--card);
+            padding: 12px;
+            border-radius: 50%;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            z-index: 100;
+            cursor: pointer;
+        }
+
+        .page-history {
+            min-height: 100vh;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+            border-top: 4px solid var(--accent);
+        }
+
+        .history-container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .scroll-box {
+            max-height: 600px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            margin-top: 20px;
+            background: var(--card);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            position: sticky;
+            top: 0;
+            background: var(--card);
+            padding: 15px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            color: var(--text);
+            font-size: 0.9em;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+            font-size: 0.85em;
+            white-space: nowrap;
+        }
+
+        .operator-badge {
+            background: var(--accent);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        #importFile { display: none; }
+
+        @media print {
+            .page-calc, .nav-hint, .btn-group, .theme-toggle, #help-modal, #toast, .history-container button {
+                display: none !important;
+            }
+            .page-history {
+                border: none;
+                padding: 0;
+                background: white;
+            }
+            .scroll-box {
+                max-height: none;
+                overflow: visible;
+                border: none;
+            }
+            table { 
+                font-size: 9pt; 
+                border: 1px solid #eee; 
+                width: 100%;
+            }
+            th, td { 
+                color: black; 
+                padding: 4px 6px;
+                font-size: 8pt;
+                white-space: nowrap;
+            }
+            .print-operator {
+                font-size: 10pt;
+                margin-bottom: 5px;
+            }
+            .operator-badge {
+                font-size: 7pt;
+                padding: 1px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="theme-toggle" onclick="toggleTheme()">
+    <span class="sun">🌙</span>
+    <span class="moon">☀️</span>
+    <span id="theme-text">Тъмна</span>
+</div>
+
+<div id="help-modal">
+    <h3 style="margin-top:0">⌨️ Шорткъти</h3>
+    <p><span class="kb-key">Enter</span> - От оператор към 500€ поле</p>
+    <p><span class="kb-key">Enter</span> - Следващо поле (в номиналите)</p>
+    <p><span class="kb-key">Enter</span> - От X-Отчет към 500€ поле</p>
+    <p><span class="kb-key">Ctrl + Enter</span> - Запис в историята</p>
+    <p><span class="kb-key">Esc</span> - Затвори помощта / Изчисти</p>
+    <p><span class="kb-key">F1</span> - Помощ</p>
+    <p><span class="kb-key">P</span> - Принтирай история</p>
+    <p><span class="kb-key">Ctrl + Insert</span> - Импорт на история</p>
+    <p><span class="kb-key">Ctrl + Delete</span> - Експорт на история</p>
+    <p><span class="kb-key">Page Up</span> - Към калкулатора ⬆️</p>
+    <p><span class="kb-key">Page Down</span> - Към историята ⬇️</p>
+    <button onclick="toggleHelp()" style="width:100%; padding:10px; cursor:pointer; border-radius:10px; background: var(--accent); color: white; border: none; font-weight: bold;">Затвори</button>
+</div>
+
+<div id="toast">✅ Операцията е успешна!</div>
+
+<div id="btnNav" class="nav-hint" onclick="togglePage()">
+    <svg id="svgDown" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+    <svg id="svgUp" style="display:none" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M17 11l-5-5-5 5M17 18l-5-5-5 5"/></svg>
+</div>
+
+<div class="page-calc">
+    <div class="app-container">
+        <header>
+            <h2 style="margin:0">💶 Касова наличност <span style="font-size:0.4em; opacity:0.4">Помощ (F1)</span></h2>
+            <div style="text-align:right">
+                <div id="date" style="font-size:0.8em; color:#64748b">-- -- ----</div>
+                <div id="clock">00:00:00</div>
+            </div>
+        </header>
+
+        <!-- Поле за оператор - ненатрапчиво -->
+        <div class="operator-row">
+            <label>
+                <span>Оператор / Касиер:</span>
+                <input type="text" id="operator-name" placeholder="Име на касиера" value="Гост">
+            </label>
+            <span class="shift-badge" id="shift-display">Първа смяна</span>
+        </div>
+
+        <div class="main-grid">
+            <div class="column">
+                <div class="col-header">Банкноти</div>
+                <div class="row b500"><span class="label">500 €</span><input type="text" id="first-input" class="c-in" data-v="500"></div>
+                <div class="row b200"><span class="label">200 €</span><input type="text" class="c-in" data-v="200"></div>
+                <div class="row b100"><span class="label">100 €</span><input type="text" class="c-in" data-v="100"></div>
+                <div class="row b50"><span class="label">50 €</span><input type="text" class="c-in" data-v="50"></div>
+                <div class="row b20"><span class="label">20 €</span><input type="text" class="c-in" data-v="20"></div>
+                <div class="row b10"><span class="label">10 €</span><input type="text" class="c-in" data-v="10"></div>
+                <div class="row b5"><span class="label">5 €</span><input type="text" class="c-in" data-v="5"></div>
+            </div>
+            <div class="column">
+                <div class="col-header">Монети</div>
+                <div class="row gold"><span class="label">2 €</span><input type="text" class="c-in" data-v="2"></div>
+                <div class="row gold"><span class="label">1 €</span><input type="text" class="c-in" data-v="1"></div>
+                <div class="row gold"><span class="label">0.50 €</span><input type="text" class="c-in" data-v="0.5"></div>
+                <div class="row gold"><span class="label">0.20 €</span><input type="text" class="c-in" data-v="0.2"></div>
+                <div class="row gold"><span class="label">0.10 €</span><input type="text" class="c-in" data-v="0.1"></div>
+                <div class="row copper"><span class="label">0.05 €</span><input type="text" class="c-in" data-v="0.05"></div>
+                <div class="row copper"><span class="label">0.02 €</span><input type="text" class="c-in" data-v="0.02"></div>
+                <div class="row copper"><span class="label">0.01 €</span><input type="text" class="c-in" data-v="0.01"></div>
+            </div>
+            <div class="column right-panel">
+                <div class="col-header">Корекции</div>
+                <div class="extra-box"><span class="special-label" style="color:#16a34a">Плюс (+):</span><input type="text" id="plus-in" class="full-in"></div>
+                <div class="extra-box"><span class="special-label" style="color:#dc2626">Минус (-):</span><input type="text" id="minus-in" class="full-in"></div>
+                <div class="extra-box"><span class="special-label" style="color:#6366f1">POS (Плащания с карта):</span><input type="text" id="pos-in" class="full-in"></div>
+                <div class="extra-box"><span class="special-label" style="color:var(--accent)">X-Отчет (Без нулиране):</span><input type="text" id="reg-in" class="full-in"></div>
+                <div class="btn-group">
+                    <button class="btn btn-save" onclick="saveHistory()">ЗАПИШИ</button>
+                    <button class="btn btn-clear" onclick="clearAll()">ИЗЧИСТИ</button>
+                </div>
+            </div>
+        </div>
+        <div class="summary-footer">
+            <div class="stat-card"><span class="special-label">В Брой:</span><span class="res-val" id="total-cash">0.00 €</span></div>
+            <div class="stat-card"><span class="special-label">Общ Оборот:</span><span class="res-val" id="day-total">0.00 €</span></div>
+            <div class="stat-card"><span class="special-label">Разлика:</span><span class="res-val" id="diff-display">0.00 €</span></div>
+        </div>
+    </div>
+</div>
+
+<div class="page-history">
+    <div class="history-container">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 15px;">
+            <h2 style="margin:0">📜 История на отчетите</h2>
+            <div>
+                <button onclick="exportToJSON()" style="cursor:pointer; background:#e0f2fe; border:1px solid #bae6fd; padding: 8px 12px; border-radius: 8px; color:#0369a1; font-weight: bold;">⬇ ЕКСПОРТ</button>
+                <button onclick="document.getElementById('importFile').click()" style="cursor:pointer; background:#fef9c3; border:1px solid #fde047; padding: 8px 12px; border-radius: 8px; color:#854d0e; font-weight: bold;">📂 ИМПОРТ</button>
+                <button onclick="printHistory()" style="cursor:pointer; background:#f1f5f9; border:1px solid #cbd5e1; padding: 8px 12px; border-radius: 8px; color:#334155; font-weight: bold;">🖨 ПРИНТ</button>
+                <button onclick="deleteHistory()" style="cursor:pointer; background:#fff1f2; border:1px solid #fecdd3; padding: 8px 12px; border-radius: 8px; color:#be123c; font-weight: bold;">🗑 ИЗТРИЙ</button>
+                <input type="file" id="importFile" accept=".json" onchange="importFromJSON(event)">
+            </div>
+        </div>
+        <div class="scroll-box">
+            <table id="historyTable">
+                <thead>
+                    <tr>
+                        <th>Дата / Час</th>
+                        <th>Касиер</th>
+                        <th>Смяна</th>
+                        <th>В брой</th>
+                        <th>Карти</th>
+                        <th>X-Отчет</th>
+                        <th>Разлика</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Тъмна тема
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        const themeText = document.getElementById('theme-text');
+        themeText.textContent = document.body.classList.contains('dark-mode') ? 'Светла' : 'Тъмна';
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('theme-text').textContent = 'Светла';
+    } else {
+        document.getElementById('theme-text').textContent = 'Тъмна';
+    }
+
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString('bg-BG');
+        document.getElementById('date').innerText = now.toLocaleDateString('bg-BG', { day:'numeric', month:'long', year:'numeric' });
+        
+        // Автоматично определяне на смяна според часа
+        const hour = now.getHours();
+        const shiftDisplay = document.getElementById('shift-display');
+        if (hour >= 7 && hour < 15) {
+            shiftDisplay.innerText = 'Първа смяна';
+            shiftDisplay.style.background = 'var(--accent)';
+        } else if (hour >= 15 && hour < 23) {
+            shiftDisplay.innerText = 'Втора смяна';
+            shiftDisplay.style.background = '#f97316';
+        } else {
+            shiftDisplay.innerText = 'Нощна смяна';
+            shiftDisplay.style.background = '#6b7280';
+        }
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    const allInputs = Array.from(document.querySelectorAll('input:not(#operator-name)'));
+    const helpModal = document.getElementById('help-modal');
+    const toast = document.getElementById('toast');
+    const operatorInput = document.getElementById('operator-name');
+    const firstInput = document.getElementById('first-input');
+    const regInput = document.getElementById('reg-in');
+
+    function toggleHelp() { 
+        helpModal.style.display = helpModal.style.display === 'block' ? 'none' : 'block'; 
+    }
+    
+    function togglePage() { 
+        window.scrollTo(0, window.pageYOffset > 300 ? 0 : document.body.scrollHeight); 
+    }
+
+    window.onscroll = function() {
+        const isDown = window.pageYOffset > 300;
+        document.getElementById('svgDown').style.display = isDown ? 'none' : 'block';
+        document.getElementById('svgUp').style.display = isDown ? 'block' : 'none';
+    };
+
+    function runCalc() {
+        let cash = 0;
+        // Банкноти и монети - само цели числа
+        document.querySelectorAll('.c-in').forEach(i => { 
+            const val = parseInt(i.value) || 0;
+            cash += val * parseFloat(i.dataset.v); 
+        });
+        
+        // Корекции - дробни числа с . или ,
+        let p = parseFloat(document.getElementById('plus-in').value.replace(',', '.')) || 0;
+        let m = parseFloat(document.getElementById('minus-in').value.replace(',', '.')) || 0;
+        let pos = parseFloat(document.getElementById('pos-in').value.replace(',', '.')) || 0;
+        let reg = parseFloat(document.getElementById('reg-in').value.replace(',', '.')) || 0;
+        
+        let dayTotal = cash + p - m + pos;
+        let diff = dayTotal - reg;
+        
+        document.getElementById('total-cash').innerText = cash.toFixed(2) + ' €';
+        document.getElementById('day-total').innerText = dayTotal.toFixed(2) + ' €';
+        const dEl = document.getElementById('diff-display');
+        dEl.innerText = (diff > 0 ? '+' : '') + diff.toFixed(2) + ' €';
+        
+        // Оцветяване: зелено за положително, червено за отрицателно
+        if (diff > 0) {
+            dEl.className = 'res-val diff-pos';
+        } else if (diff < 0) {
+            dEl.className = 'res-val diff-neg';
+        } else {
+            dEl.className = 'res-val';
+        }
+    }
+
+    function getCurrentShift() {
+        const hour = new Date().getHours();
+        if (hour >= 7 && hour < 15) return 'Първа';
+        if (hour >= 15 && hour < 23) return 'Втора';
+        return 'Нощна';
+    }
+
+    function saveHistory() {
+        const operator = document.getElementById('operator-name').value.trim() || 'Гост';
+        const shift = getCurrentShift();
+        
+        const report = {
+            time: new Date().toLocaleString('bg-BG', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'}),
+            operator: operator,
+            shift: shift,
+            cash: document.getElementById('total-cash').innerText,
+            pos: document.getElementById('pos-in').value || '0.00',
+            reg: document.getElementById('reg-in').value || '0.00',
+            diff: document.getElementById('diff-display').innerText
+        };
+        
+        let history = JSON.parse(localStorage.getItem('cashHistory') || '[]');
+        history.unshift(report);
+        localStorage.setItem('cashHistory', JSON.stringify(history));
+        loadHistory();
+        showToast(`✅ Записано! (${operator}, ${shift} смяна)`);
+        
+        localStorage.setItem('lastOperator', operator);
+    }
+
+    function showToast(msg) {
+        toast.innerText = msg; toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 1500);
+    }
+
+    function exportToJSON() {
+        const history = JSON.parse(localStorage.getItem('cashHistory') || '[]');
+        if (history.length === 0) return alert("Няма история за експорт!");
+        
+        const dataStr = JSON.stringify(history, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `kasa_history_${new Date().toISOString().slice(0,10)}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        showToast("✅ Експортирано!");
+    }
+
+    function importFromJSON(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (!Array.isArray(imported)) throw new Error("Невалиден формат");
+                if (imported.length === 0) return alert("Файлът е празен!");
+                
+                if (confirm(`Импортиране на ${imported.length} записа?`)) {
+                    let history = JSON.parse(localStorage.getItem('cashHistory') || '[]');
+                    const existingTimes = new Set(history.map(h => h.time));
+                    const newRecords = imported.filter(h => !existingTimes.has(h.time));
+                    
+                    if (newRecords.length === 0) return alert("Няма нови записи!");
+                    
+                    let combined = [...newRecords, ...history];
+                    localStorage.setItem('cashHistory', JSON.stringify(combined));
+                    loadHistory();
+                    showToast(`📂 Импортирани ${newRecords.length} записа!`);
+                }
+            } catch (error) {
+                alert("Грешка: " + error.message);
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    function loadHistory() {
+        const history = JSON.parse(localStorage.getItem('cashHistory') || '[]');
+        document.querySelector('#historyTable tbody').innerHTML = history.map(h => `
+            <tr>
+                <td><b>${h.time}</b></td>
+                <td><span class="operator-badge">${h.operator || 'Гост'}</span></td>
+                <td>${h.shift || 'Първа'}</td>
+                <td>${h.cash}</td>
+                <td>${h.pos} €</td>
+                <td>${h.reg} €</td>
+                <td class="${h.diff.includes('+')?'diff-pos':h.diff.includes('-')?'diff-neg':''}">${h.diff}</td>
+            </tr>
+        `).join('');
+    }
+
+    function deleteHistory() { 
+        if(confirm("Изтриване на цялата история?")) { 
+            localStorage.removeItem('cashHistory'); 
+            loadHistory(); 
+            showToast("🗑 Историята е изтрита!");
+        } 
+    }
+    
+    function clearAll() { 
+        allInputs.forEach(i => i.value = ''); 
+        runCalc(); 
+        firstInput.focus(); 
+    }
+
+    function printHistory() {
+        const operator = document.getElementById('operator-name').value || 'Гост';
+        const history = JSON.parse(localStorage.getItem('cashHistory') || '[]');
+        
+        if (history.length === 0) {
+            alert("Няма история за печат!");
+            return;
+        }
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Касов отчет - История</title>
+                    <style>
+                        body { font-family: 'Courier New', monospace; padding: 15px; max-width: 1000px; margin: 0 auto; }
+                        h1 { text-align: center; border-bottom: 1px solid #000; padding-bottom: 5px; font-size: 14pt; margin: 5px 0; }
+                        h2 { text-align: center; color: #333; font-size: 12pt; margin: 5px 0; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 8pt; }
+                        th { background: #f0f0f0; padding: 4px 3px; text-align: left; border-bottom: 1px solid #000; font-size: 8pt; white-space: nowrap; }
+                        td { padding: 3px 3px; border-bottom: 1px solid #ccc; font-size: 8pt; white-space: nowrap; }
+                        .operator { background: #e6f3ff; padding: 2px 4px; border-radius: 3px; font-size: 7pt; }
+                        .footer { margin-top: 10px; text-align: center; font-size: 7pt; border-top: 1px solid #ccc; padding-top: 5px; }
+                        .diff-pos { color: green; font-weight: bold; }
+                        .diff-neg { color: red; font-weight: bold; }
+                        .shift-badge-print { background: #3b82f6; color: white; padding: 1px 4px; border-radius: 8px; font-size: 7pt; }
+                        p { margin: 3px 0; font-size: 8pt; }
+                        @media print {
+                            body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>💰 КАСОВ ОТЧЕТ</h1>
+                    <h2>История на транзакциите</h2>
+                    
+                    <p><strong>Отпечатал:</strong> ${operator}</p>
+                    <p><strong>Дата на печат:</strong> ${new Date().toLocaleString('bg-BG')}</p>
+                    <p><strong>Общо записа:</strong> ${history.length}</p>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Дата/Час</th>
+                                <th>Касиер</th>
+                                <th>Смяна</th>
+                                <th>В брой</th>
+                                <th>Карти</th>
+                                <th>X-Отчет</th>
+                                <th>Разлика</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${history.map(h => `
+                                <tr>
+                                    <td>${h.time}</td>
+                                    <td><span class="operator">${h.operator || 'Гост'}</span></td>
+                                    <td><span class="shift-badge-print">${h.shift || 'Първа'}</span></td>
+                                    <td>${h.cash}</td>
+                                    <td>${h.pos} €</td>
+                                    <td>${h.reg} €</td>
+                                    <td class="${h.diff.includes('+') ? 'diff-pos' : (h.diff.includes('-') ? 'diff-neg' : '')}">${h.diff}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    
+                    <div class="footer">
+                        <p>────────────────────────────────</p>
+                        <p>Подпис: ______________________</p>
+                        <p>© Касов Калкулатор Pro</p>
+                    </div>
+                    
+                    <script>
+                        window.onload = () => { window.print(); window.close(); }
+                    <\/script>
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+    }
+
+    window.addEventListener('keydown', (e) => {
+        const key = e.key.toLowerCase();
+        
+        if (e.key === 'F1') { 
+            e.preventDefault(); 
+            toggleHelp(); 
+        }
+        
+        if (e.key === 'Escape') { 
+            if (helpModal.style.display === 'block') {
+                e.preventDefault();
+                helpModal.style.display = 'none';
+            } else {
+                clearAll();
+            }
+        }
+        
+        if (e.key === 'Enter' && e.ctrlKey) { 
+            e.preventDefault(); 
+            saveHistory(); 
+        }
+        
+        if (e.key === 'Enter' && !e.ctrlKey) { 
+            // Enter от оператор
+            if (document.activeElement === operatorInput) {
+                e.preventDefault();
+                firstInput.focus();
+            }
+        }
+        
+        if (key === 'p' && !e.ctrlKey && !e.altKey) { 
+            e.preventDefault(); 
+            printHistory(); 
+        }
+        
+        // Ctrl + Insert за импорт
+        if (e.key === 'Insert' && e.ctrlKey) { 
+            e.preventDefault(); 
+            document.getElementById('importFile').click(); 
+        }
+        
+        // Ctrl + Delete за експорт
+        if (e.key === 'Delete' && e.ctrlKey) { 
+            e.preventDefault(); 
+            exportToJSON(); 
+        }
+        
+        if (e.key === 'PageUp') { 
+            e.preventDefault(); 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        if (e.key === 'PageDown') { 
+            e.preventDefault(); 
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+    });
+
+    // Различна валидация за различните полета
+    allInputs.forEach((input, idx) => {
+        // За банкноти и монети (c-in клас) - само цели числа
+        if (input.classList.contains('c-in')) {
+            input.addEventListener('input', (e) => { 
+                e.target.value = e.target.value.replace(/[^0-9]/g, ''); 
+                runCalc(); 
+            });
+        } 
+        // За корекции (plus-in, minus-in, pos-in, reg-in) - дробни с . или , и максимум 2 знака след десетичния разделител
+        else {
+            input.addEventListener('input', (e) => { 
+                // Запазваме цифри, точка и запетая
+                let val = e.target.value.replace(/[^0-9.,]/g, '');
+                
+                // Нормализираме - ако има и двете, последната точка/запетая печели
+                if ((val.match(/\./g) || []).length > 1 || (val.match(/,/g) || []).length > 1) {
+                    const lastDot = val.lastIndexOf('.');
+                    const lastComma = val.lastIndexOf(',');
+                    const lastSep = Math.max(lastDot, lastComma);
+                    if (lastSep > -1) {
+                        val = val.substring(0, lastSep) + '.' + val.substring(lastSep + 1).replace(/[.,]/g, '');
+                    }
+                }
+                
+                // Ограничаваме до 2 знака след десетичния разделител
+                if (val.includes('.') || val.includes(',')) {
+                    // Заменяме запетая с точка за унифициране
+                    val = val.replace(',', '.');
+                    const parts = val.split('.');
+                    if (parts.length > 1) {
+                        // Ако има десетични знаци, оставяме само първите два
+                        const integerPart = parts[0];
+                        const decimalPart = parts[1].substring(0, 2);
+                        val = integerPart + '.' + decimalPart;
+                    }
+                }
+                
+                e.target.value = val;
+                runCalc(); 
+            });
+        }
+        
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.ctrlKey) { 
+                e.preventDefault(); 
+                
+                // Ако сме на X-Отчет (последното поле)
+                if (document.activeElement === regInput) {
+                    firstInput.focus();
+                }
+                // Ако има следващо поле, отиваме на него
+                else {
+                    const currentIndex = allInputs.findIndex(inp => inp === document.activeElement);
+                    if (currentIndex >= 0 && currentIndex < allInputs.length - 1) {
+                        allInputs[currentIndex + 1].focus();
+                    }
+                }
+            }
+        });
+    });
+
+    window.onload = () => { 
+        loadHistory(); 
+        // Фокус върху полето оператор при зареждане
+        operatorInput.focus();
+        operatorInput.select();
+        
+        const lastOperator = localStorage.getItem('lastOperator');
+        if (lastOperator) {
+            document.getElementById('operator-name').value = lastOperator;
+        }
+        
+        document.getElementById('operator-name').addEventListener('change', function() {
+            localStorage.setItem('lastOperator', this.value);
+        });
+    };
+</script>
+</body>
+</html>
