@@ -497,17 +497,15 @@
 
 <div id="help-modal">
     <h3 style="margin-top:0">⌨️ Шорткъти</h3>
-    <p><span class="kb-key">Enter</span> - От оператор към 500€ поле</p>
-    <p><span class="kb-key">Enter</span> - Следващо поле (в номиналите)</p>
-    <p><span class="kb-key">Enter</span> - От X-Отчет към 500€ поле</p>
+    <p><span class="kb-key">F1</span> - Помощ - този прозорец</p>
+    <p><span class="kb-key">Enter</span> - Въвежда и преминава към следващо поле</p>
     <p><span class="kb-key">Ctrl + Enter</span> - Запис в историята</p>
-    <p><span class="kb-key">Esc</span> - Затвори помощта / Изчисти</p>
-    <p><span class="kb-key">F1</span> - Помощ</p>
-    <p><span class="kb-key">P</span> - Принтирай история</p>
+    <p><span class="kb-key">Esc</span> - Изчиства/Затваря</p>
+    <p><span class="kb-key">Alt + P</span> - Принтира форматирана истори</p>
     <p><span class="kb-key">Ctrl + Insert</span> - Импорт на история</p>
     <p><span class="kb-key">Ctrl + Delete</span> - Експорт на история</p>
-    <p><span class="kb-key">Page Up</span> - Към калкулатора ⬆️</p>
-    <p><span class="kb-key">Page Down</span> - Към историята ⬇️</p>
+    <p><span class="kb-key">Page Up</span> - Към калкулатора</p>
+    <p><span class="kb-key">Page Down</span> - Към историята</p>
     <button onclick="toggleHelp()" style="width:100%; padding:10px; cursor:pointer; border-radius:10px; background: var(--accent); color: white; border: none; font-weight: bold;">Затвори</button>
 </div>
 
@@ -847,7 +845,7 @@
                     </style>
                 </head>
                 <body>
-                    <h1>💰 КАСОВ ОТЧЕТ</h1>
+                    <h1>КАСОВ ОТЧЕТ</h1>
                     <h2>История на транзакциите</h2>
                     
                     <p><strong>Отпечатал:</strong> ${operator}</p>
@@ -926,7 +924,8 @@
             }
         }
         
-        if (key === 'p' && !e.ctrlKey && !e.altKey) { 
+        // Alt + P за принтиране (поддържа и българско П)
+        if ((key === 'p' || key === 'п') && e.altKey && !e.ctrlKey) { 
             e.preventDefault(); 
             printHistory(); 
         }
