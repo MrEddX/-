@@ -2,9 +2,10 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <title>Касов Калкулатор Pro - Смени</title>
+    <title>Калкулатор Касова Наличност (c) 2026</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        /* CSS променливи - удобно за промени */
         :root {
             --bg: #f8fafc;
             --card: #ffffff;
@@ -23,6 +24,7 @@
             --operator-bg: #f8fafc;
         }
 
+        /* Тъмна тема - само цветове */
         .dark-mode {
             --bg: #0f172a;
             --card: #1e293b;
@@ -54,6 +56,7 @@
             transition: background-color 0.3s ease, color 0.2s ease;
         }
 
+        /* Бутон за смяна на темата */
         .theme-toggle {
             position: fixed;
             top: 20px;
@@ -78,6 +81,7 @@
             background: var(--hover-bg);
         }
 
+        /* Показваме само активната икона */
         .theme-toggle .sun { display: inline; }
         .theme-toggle .moon { display: none; }
         .dark-mode .theme-toggle .sun { display: none; }
@@ -123,6 +127,7 @@
             color: var(--accent);
         }
 
+        /* Ред за оператор и смяна */
         .operator-row {
             display: flex;
             align-items: center;
@@ -168,6 +173,7 @@
             font-weight: bold;
         }
 
+        /* Основно мрежово оформление */
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1.3fr;
@@ -231,6 +237,7 @@
             background: var(--hover-bg);
         }
 
+        /* Цветни ленти за различните номинали */
         .b500 { border-left: 6px solid #a29bfe; background: #f5f3ff; }
         .b200 { border-left: 6px solid #fbc531; background: #fffbeb; }
         .b100 { border-left: 6px solid #4cd137; background: #f0fdf4; }
@@ -241,6 +248,7 @@
         .gold { border-left: 6px solid #d4af37; background: #fffdf0; }
         .copper { border-left: 6px solid #b87333; background: #fff7f2; }
 
+        /* Тъмна тема за цветните ленти */
         .dark-mode .b500 { background: #2d2b4a; }
         .dark-mode .b200 { background: #3d3a24; }
         .dark-mode .b100 { background: #1d3a2a; }
@@ -303,8 +311,8 @@
             font-weight: 900;
         }
 
-        .diff-pos { color: #16a34a; }
-        .diff-neg { color: #dc2626; }
+        .diff-pos { color: #16a34a; } /* зелено за + */
+        .diff-neg { color: #dc2626; } /* червено за - */
 
         .btn-group {
             display: grid;
@@ -335,6 +343,7 @@
             border-color: var(--btn-clear-border);
         }
 
+        /* Модални прозорци */
         #help-modal, #toast {
             display: none;
             position: fixed;
@@ -450,6 +459,7 @@
 
         #importFile { display: none; }
 
+        /* Стилове за печат */
         @media print {
             .page-calc, .nav-hint, .btn-group, .theme-toggle, #help-modal, #toast, .history-container button {
                 display: none !important;
@@ -484,38 +494,214 @@
                 padding: 1px 4px;
             }
         }
+        
+        /* Адаптивен дизайн за различни размери екрани */
+        @media screen and (max-width: 1000px) {
+            .app-container {
+                padding: 20px 20px;
+                max-width: 95%;
+            }
+            .main-grid {
+                gap: 15px;
+            }
+            input {
+                width: 70px;
+                font-size: 1em;
+            }
+            .full-in {
+                font-size: 1.1em;
+            }
+            .operator-row input {
+                width: 150px;
+            }
+        }
+
+        @media screen and (max-width: 700px) {
+            .app-container {
+                padding: 15px 12px;
+            }
+            .main-grid {
+                gap: 10px;
+            }
+            .row {
+                padding: 4px 8px;
+            }
+            .label {
+                font-size: 0.85em;
+            }
+            input {
+                width: 60px;
+                padding: 6px;
+                font-size: 0.9em;
+            }
+            .full-in {
+                font-size: 1em;
+                padding: 8px;
+            }
+            .operator-row {
+                padding: 5px 8px;
+            }
+            .operator-row input {
+                width: 120px;
+                padding: 6px 8px;
+            }
+            .shift-badge {
+                font-size: 0.75em;
+                padding: 3px 8px;
+            }
+            .summary-footer {
+                gap: 10px;
+            }
+            .stat-card {
+                padding: 8px;
+            }
+            .res-val {
+                font-size: 1.4em;
+            }
+            .btn-group {
+                gap: 8px;
+            }
+            .btn {
+                padding: 12px;
+                font-size: 0.85em;
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            .app-container {
+                padding: 10px 8px;
+            }
+            .main-grid {
+                gap: 8px;
+            }
+            .col-header {
+                font-size: 0.65em;
+            }
+            .row {
+                padding: 3px 5px;
+            }
+            .label {
+                font-size: 0.75em;
+            }
+            input {
+                width: 50px;
+                padding: 4px;
+                font-size: 0.8em;
+            }
+            .full-in {
+                font-size: 0.9em;
+                padding: 6px;
+            }
+            .operator-row {
+                padding: 4px 6px;
+            }
+            .operator-row label {
+                font-size: 0.8em;
+            }
+            .operator-row input {
+                width: 100px;
+                padding: 5px 6px;
+                font-size: 0.8em;
+            }
+            .shift-badge {
+                font-size: 0.65em;
+                padding: 2px 6px;
+            }
+            .summary-footer {
+                gap: 5px;
+            }
+            .stat-card {
+                padding: 5px;
+            }
+            .special-label {
+                font-size: 0.65em;
+            }
+            .res-val {
+                font-size: 1.1em;
+            }
+            .btn-group {
+                gap: 5px;
+                margin-top: 5px;
+            }
+            .btn {
+                padding: 8px;
+                font-size: 0.75em;
+            }
+        }
+
+        /* За много големи екрани */
+        @media screen and (min-width: 1600px) {
+            .app-container {
+                max-width: 1300px;
+                padding: 30px 45px;
+            }
+            .main-grid {
+                gap: 35px;
+            }
+            .row {
+                padding: 8px 16px;
+            }
+            .label {
+                font-size: 1.1em;
+            }
+            input {
+                width: 100px;
+                padding: 10px;
+                font-size: 1.3em;
+            }
+            .full-in {
+                font-size: 1.5em;
+            }
+            .res-val {
+                font-size: 2.2em;
+            }
+            .btn {
+                padding: 16px;
+                font-size: 1em;
+            }
+        }
     </style>
 </head>
 <body>
 
+<!-- Бутон за смяна на темата -->
 <div class="theme-toggle" onclick="toggleTheme()">
     <span class="sun">🌙</span>
     <span class="moon">☀️</span>
     <span id="theme-text">Тъмна</span>
 </div>
 
+<!-- Помощен прозорец с клавишни комбинации -->
 <div id="help-modal">
-    <h3 style="margin-top:0">⌨️ Шорткъти</h3>
+    <h2 style="margin-top:0; text-align:center">Помощ</h2>
+    <h3 style="margin-top:0">⌨️ Бързи клавиши</h3>
     <p><span class="kb-key">F1</span> - Помощ - този прозорец</p>
     <p><span class="kb-key">Enter</span> - Въвежда и преминава към следващо поле</p>
+    <p><span class="kb-key">Page Up</span> - Към калкулатора</p>
+    <p><span class="kb-key">Page Down</span> - Към историята</p>
     <p><span class="kb-key">Ctrl + Enter</span> - Запис в историята</p>
     <p><span class="kb-key">Esc</span> - Изчиства/Затваря</p>
     <p><span class="kb-key">Alt + P</span> - Принтира форматирана история</p>
-    <p><span class="kb-key">Ctrl + Insert</span> - Импорт на история</p>
-    <p><span class="kb-key">Ctrl + Delete</span> - Експорт на история</p>
-    <p><span class="kb-key">Page Up</span> - Към калкулатора</p>
-    <p><span class="kb-key">Page Down</span> - Към историята</p>
-    <p><span class="kb-key">Ctrl + F8</span> - Архивира и изтрива цялата историята</p>
+    <p><span class="kb-key">Alt + S</span> - Експорт на история в JSON файл</p>
+    <p><span class="kb-key">Ctrl + Insert</span> - Импорт на история от JSON файл</p>
+    <p><span class="kb-key">Ctrl + Delete</span> - Експортира и изтрива цялата история</p>
     <button onclick="toggleHelp()" style="width:100%; padding:10px; cursor:pointer; border-radius:10px; background: var(--accent); color: white; border: none; font-weight: bold;">Затвори</button>
+    <hr style="border: none; border-top: 1px solid var(--border); margin: 15px 0 10px 0; opacity:0.5;">
+    <p style="margin:5px 0 0 0; text-align:center; font-size:0.85em; color: var(--text); opacity:0.7;">Отчет Каса версия 1.05 (c) 2026</p>
+    <p style="margin:2px 0 0 0; text-align:center; font-size:0.8em;">
+        <a href="https://github.com/MrEddX/daily-cash-register-reports/releases" target="_blank" style="color: var(--accent); text-decoration: none; opacity:0.8;">🔗 Проверка за нова версия</a>
+    </p>
 </div>
 
 <div id="toast">✅ Операцията е успешна!</div>
 
+<!-- Бутон за навигация между страниците -->
 <div id="btnNav" class="nav-hint" onclick="togglePage()">
     <svg id="svgDown" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
     <svg id="svgUp" style="display:none" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M17 11l-5-5-5 5M17 18l-5-5-5 5"/></svg>
 </div>
 
+<!-- Основен калкулатор -->
 <div class="page-calc">
     <div class="app-container">
         <header>
@@ -526,6 +712,7 @@
             </div>
         </header>
 
+        <!-- Ред за оператор -->
         <div class="operator-row">
             <label>
                 <span>Оператор / Касиер:</span>
@@ -534,7 +721,9 @@
             <span class="shift-badge" id="shift-display">Първа смяна</span>
         </div>
 
+        <!-- Трите колони с номинали и корекции -->
         <div class="main-grid">
+            <!-- Банкноти -->
             <div class="column">
                 <div class="col-header">Банкноти</div>
                 <div class="row b500"><span class="label">500 €</span><input type="text" id="first-input" class="c-in" data-v="500"></div>
@@ -545,6 +734,7 @@
                 <div class="row b10"><span class="label">10 €</span><input type="text" class="c-in" data-v="10"></div>
                 <div class="row b5"><span class="label">5 €</span><input type="text" class="c-in" data-v="5"></div>
             </div>
+            <!-- Монети -->
             <div class="column">
                 <div class="col-header">Монети</div>
                 <div class="row gold"><span class="label">2 €</span><input type="text" class="c-in" data-v="2"></div>
@@ -556,6 +746,7 @@
                 <div class="row copper"><span class="label">0.02 €</span><input type="text" class="c-in" data-v="0.02"></div>
                 <div class="row copper"><span class="label">0.01 €</span><input type="text" class="c-in" data-v="0.01"></div>
             </div>
+            <!-- Корекции -->
             <div class="column right-panel">
                 <div class="col-header">Корекции</div>
                 <div class="extra-box"><span class="special-label" style="color:#16a34a">Плюс (+):</span><input type="text" id="plus-in" class="full-in"></div>
@@ -568,6 +759,7 @@
                 </div>
             </div>
         </div>
+        <!-- Долен ред с резултати -->
         <div class="summary-footer">
             <div class="stat-card"><span class="special-label">В Брой:</span><span class="res-val" id="total-cash">0.00 €</span></div>
             <div class="stat-card"><span class="special-label">Общ Оборот:</span><span class="res-val" id="day-total">0.00 €</span></div>
@@ -576,6 +768,7 @@
     </div>
 </div>
 
+<!-- Страница с история -->
 <div class="page-history">
     <div class="history-container">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 15px;">
@@ -608,6 +801,7 @@
 </div>
 
 <script>
+    // Превключване между светла и тъмна тема
     function toggleTheme() {
         document.body.classList.toggle('dark-mode');
         const themeText = document.getElementById('theme-text');
@@ -615,6 +809,7 @@
         localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
     }
 
+    // Зареждане на запазената тема
     if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark-mode');
         document.getElementById('theme-text').textContent = 'Светла';
@@ -622,11 +817,13 @@
         document.getElementById('theme-text').textContent = 'Тъмна';
     }
 
+    // Актуализиране на часовника и датата
     function updateClock() {
         const now = new Date();
         document.getElementById('clock').innerText = now.toLocaleTimeString('bg-BG');
         document.getElementById('date').innerText = now.toLocaleDateString('bg-BG', { day:'numeric', month:'long', year:'numeric' });
         
+        // Определяне на смяна според часа
         const hour = now.getHours();
         const shiftDisplay = document.getElementById('shift-display');
         if (hour >= 7 && hour < 15) {
@@ -642,6 +839,7 @@
     }
     setInterval(updateClock, 1000); updateClock();
 
+    // Всички полета за въвеждане (без оператора)
     const allInputs = Array.from(document.querySelectorAll('input:not(#operator-name)'));
     const helpModal = document.getElementById('help-modal');
     const toast = document.getElementById('toast');
@@ -649,20 +847,24 @@
     const firstInput = document.getElementById('first-input');
     const regInput = document.getElementById('reg-in');
 
+    // Отваря/затваря помощния прозорец
     function toggleHelp() { 
         helpModal.style.display = helpModal.style.display === 'block' ? 'none' : 'block'; 
     }
     
+    // Превключва между калкулатор и история
     function togglePage() { 
         window.scrollTo(0, window.pageYOffset > 300 ? 0 : document.body.scrollHeight); 
     }
 
+    // Промяна на иконата за навигация при скрол
     window.onscroll = function() {
         const isDown = window.pageYOffset > 300;
         document.getElementById('svgDown').style.display = isDown ? 'none' : 'block';
         document.getElementById('svgUp').style.display = isDown ? 'block' : 'none';
     };
 
+    // Основна функция за изчисление
     function runCalc() {
         let cash = 0;
         document.querySelectorAll('.c-in').forEach(i => { 
@@ -675,7 +877,8 @@
         let pos = parseFloat(document.getElementById('pos-in').value.replace(',', '.')) || 0;
         let reg = parseFloat(document.getElementById('reg-in').value.replace(',', '.')) || 0;
         
-        let dayTotal = cash + p - m + pos;
+        // Плюс = разходи (изваждаме), минус = доп.приходи (добавяме)
+        let dayTotal = cash - p + m + pos;
         let diff = dayTotal - reg;
         
         document.getElementById('total-cash').innerText = cash.toFixed(2) + ' €';
@@ -683,6 +886,7 @@
         const dEl = document.getElementById('diff-display');
         dEl.innerText = (diff > 0 ? '+' : '') + diff.toFixed(2) + ' €';
         
+        // Цветове за разликата
         if (diff > 0) {
             dEl.className = 'res-val diff-pos';
         } else if (diff < 0) {
@@ -692,6 +896,7 @@
         }
     }
 
+    // Връща текущата смяна според часа
     function getCurrentShift() {
         const hour = new Date().getHours();
         if (hour >= 7 && hour < 15) return 'Първа';
@@ -699,6 +904,7 @@
         return 'Нощна';
     }
 
+    // Записва текущия отчет в историята
     function saveHistory() {
         const operator = document.getElementById('operator-name').value.trim() || 'Гост';
         const shift = getCurrentShift();
@@ -722,11 +928,13 @@
         localStorage.setItem('lastOperator', operator);
     }
 
+    // Показва временно съобщение
     function showToast(msg) {
         toast.innerText = msg; toast.style.display = 'block';
         setTimeout(() => { toast.style.display = 'none'; }, 1500);
     }
 
+    // Експортира историята като JSON файл
     function exportToJSON() {
         const history = JSON.parse(localStorage.getItem('cashHistory') || '[]');
         if (history.length === 0) return alert("Няма история за експорт!");
@@ -746,6 +954,7 @@
         showToast("✅ Експортирано!");
     }
 
+    // Импортира история от JSON файл
     function importFromJSON(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -783,6 +992,7 @@
         event.target.value = '';
     }
 
+    // Зарежда историята от localStorage и я показва
     function loadHistory() {
         const history = JSON.parse(localStorage.getItem('cashHistory') || '[]');
         document.querySelector('#historyTable tbody').innerHTML = history.map(h => `
@@ -798,6 +1008,7 @@
         `).join('');
     }
 
+    // Изтрива цялата история
     function deleteHistory() { 
         if(confirm("Изтриване на цялата история?")) { 
             localStorage.removeItem('cashHistory'); 
@@ -806,12 +1017,14 @@
         } 
     }
     
+    // Изчиства всички полета
     function clearAll() { 
         allInputs.forEach(i => i.value = ''); 
         runCalc(); 
         firstInput.focus(); 
     }
    
+    // Архивира и изтрива историята
     function deleteHistoryWithArchive() {
         const history = JSON.parse(localStorage.getItem('cashHistory') || '[]');
         
@@ -846,6 +1059,7 @@
         }
     }            
     
+    // Принтира историята
     function printHistory() {
         const operator = document.getElementById('operator-name').value || 'Гост';
         const history = JSON.parse(localStorage.getItem('cashHistory') || '[]');
@@ -916,7 +1130,7 @@
                     <div class="footer">
                         <p>────────────────────────────────</p>
                         <p>Подпис: ______________________</p>
-                        <p>© Касов Калкулатор Pro</p>
+                        <p>Касов Калкулатор v1.05 © 2026</p>
                     </div>
                     
                     <script>
@@ -928,6 +1142,7 @@
         printWindow.document.close();
     }
 
+    // Обработка на клавишни комбинации
     window.addEventListener('keydown', (e) => {
         const key = e.key.toLowerCase();
         
@@ -957,6 +1172,7 @@
             }
         }
         
+        // Alt+P за печат (и на български)
         if ((key === 'p' || key === 'п') && e.altKey && !e.ctrlKey) { 
             e.preventDefault(); 
             printHistory(); 
@@ -967,12 +1183,14 @@
             document.getElementById('importFile').click(); 
         }
         
-        if (e.key === 'Delete' && e.ctrlKey) { 
-            e.preventDefault(); 
-            exportToJSON(); 
+        // Alt+S за експорт (и на български)
+        if ((key === 's' || key === 'с') && e.altKey && !e.ctrlKey && !e.shiftKey) {
+            e.preventDefault();
+            exportToJSON();
         }
         
-        if (e.key === 'F8' && e.ctrlKey && !e.altKey && !e.shiftKey) { 
+        // Ctrl+Delete за архив
+        if (e.key === 'Delete' && e.ctrlKey && !e.altKey && !e.shiftKey) { 
             e.preventDefault(); 
             deleteHistoryWithArchive(); 
         }
@@ -988,16 +1206,21 @@
         }
     });
 
+    // Валидация на въвеждането за всяко поле
     allInputs.forEach((input, idx) => {
+        // За банкноти и монети - само цифри
         if (input.classList.contains('c-in')) {
             input.addEventListener('input', (e) => { 
                 e.target.value = e.target.value.replace(/[^0-9]/g, ''); 
                 runCalc(); 
             });
-        } else {
+        } 
+        // За корекции - цифри, точка, запетая, максимум 2 знака след десетичната
+        else {
             input.addEventListener('input', (e) => { 
                 let val = e.target.value.replace(/[^0-9.,]/g, '');
                 
+                // Коригиране при multiple разделители
                 if ((val.match(/\./g) || []).length > 1 || (val.match(/,/g) || []).length > 1) {
                     const lastDot = val.lastIndexOf('.');
                     const lastComma = val.lastIndexOf(',');
@@ -1007,6 +1230,7 @@
                     }
                 }
                 
+                // Ограничаване до 2 знака след десетичния разделител
                 if (val.includes('.') || val.includes(',')) {
                     val = val.replace(',', '.');
                     const parts = val.split('.');
@@ -1022,12 +1246,13 @@
             });
         }
         
+        // Навигация с Enter
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.ctrlKey) { 
                 e.preventDefault(); 
                 
                 if (document.activeElement === regInput) {
-                    firstInput.focus();
+                    firstInput.focus();  // От X-Отчет към 500€
                 } else {
                     const currentIndex = allInputs.findIndex(inp => inp === document.activeElement);
                     if (currentIndex >= 0 && currentIndex < allInputs.length - 1) {
@@ -1038,9 +1263,10 @@
         });
     });
 
+    // Инициализация при зареждане
     window.onload = () => { 
         loadHistory(); 
-        operatorInput.focus();
+        operatorInput.focus();  // Фокус в полето за оператор
         operatorInput.select();
         
         const lastOperator = localStorage.getItem('lastOperator');
