@@ -141,6 +141,7 @@
             display: flex; align-items: center; padding: 6px 12px;
             border-radius: 10px; border: 1px solid var(--border); background: var(--card);
             transition: background-color 0.2s ease, border-color 0.2s ease;
+            gap: 8px;
         }
         .label { flex: 1; font-weight: 700; font-size: 0.95em; }
 
@@ -152,6 +153,15 @@
         .dark-mode input { border: 1px solid var(--border); }
         input:focus { outline: none; border-color: var(--accent); background: #f0f7ff; }
         .dark-mode input:focus { background: var(--hover-bg); }
+
+        .row-sum {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--accent);
+            min-width: 70px;
+            text-align: right;
+            padding-right: 5px;
+        }
 
         .b500 { border-left: 6px solid #a29bfe; background: #f5f3ff; }
         .b200 { border-left: 6px solid #fbc531; background: #fffbeb; }
@@ -267,6 +277,7 @@
             input { width: 70px; font-size: 1em; }
             .full-in { font-size: 1.1em; }
             .operator-row input { width: 150px; }
+            .row-sum { min-width: 55px; font-size: 0.75em; }
         }
         @media screen and (max-width: 700px) {
             .app-container { padding: 15px 12px; }
@@ -283,12 +294,13 @@
             .res-val { font-size: 1.4em; }
             .btn-group { gap: 8px; }
             .btn { padding: 12px; font-size: 0.85em; }
+            .row-sum { min-width: 45px; font-size: 0.65em; }
         }
         @media screen and (max-width: 500px) {
             .app-container { padding: 10px 8px; }
             .main-grid { gap: 8px; }
             .col-header { font-size: 0.65em; }
-            .row { padding: 3px 5px; }
+            .row { padding: 3px 5px; gap: 4px; }
             .label { font-size: 0.75em; }
             input { width: 50px; padding: 4px; font-size: 0.8em; }
             .full-in { font-size: 0.9em; padding: 6px; }
@@ -302,6 +314,7 @@
             .res-val { font-size: 1.1em; }
             .btn-group { gap: 5px; margin-top: 5px; }
             .btn { padding: 8px; font-size: 0.75em; }
+            .row-sum { min-width: 35px; font-size: 0.55em; }
         }
         @media screen and (min-width: 1600px) {
             .app-container { max-width: 1300px; padding: 30px 45px; }
@@ -312,6 +325,7 @@
             .full-in { font-size: 1.5em; }
             .res-val { font-size: 2.2em; }
             .btn { padding: 16px; font-size: 1em; }
+            .row-sum { font-size: 1em; min-width: 85px; }
         }
     </style>
 </head>
@@ -355,7 +369,6 @@
     <hr style="border: none; border-top: 1px solid var(--border); margin: 15px 0 10px 0; opacity:0.5;">
     <p style="margin:5px 0 0 0; text-align:center; font-size:0.85em; color: var(--text); opacity:0.7;">Отчет Каса версия 2.0 (c) 2026</p>
     <p style="margin:2px 0 0 0; text-align:center; font-size:0.8em;">
-        <!-- FIX: rel="noopener noreferrer" added to prevent window.opener exploit -->
         <a href="https://github.com/MrEddX/daily-cash-register-reports/releases/latest" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none; opacity:0.8;">🔗 Проверка за нова версия</a>
     </p>
 </div>
@@ -391,25 +404,25 @@
             <!-- Банкноти -->
             <div class="column">
                 <div class="col-header">Банкноти</div>
-                <div class="row b500"><span class="label">500 €</span><input type="text" id="first-input" class="c-in" data-v="500" inputmode="numeric"></div>
-                <div class="row b200"><span class="label">200 €</span><input type="text" class="c-in" data-v="200" inputmode="numeric"></div>
-                <div class="row b100"><span class="label">100 €</span><input type="text" class="c-in" data-v="100" inputmode="numeric"></div>
-                <div class="row b50"><span class="label">50 €</span><input type="text" class="c-in" data-v="50" inputmode="numeric"></div>
-                <div class="row b20"><span class="label">20 €</span><input type="text" class="c-in" data-v="20" inputmode="numeric"></div>
-                <div class="row b10"><span class="label">10 €</span><input type="text" class="c-in" data-v="10" inputmode="numeric"></div>
-                <div class="row b5"><span class="label">5 €</span><input type="text" class="c-in" data-v="5" inputmode="numeric"></div>
+                <div class="row b500"><span class="label">500 €</span><input type="text" id="first-input" class="c-in" data-v="500" inputmode="numeric"><span class="row-sum" id="sum-500">0.00 €</span></div>
+                <div class="row b200"><span class="label">200 €</span><input type="text" class="c-in" data-v="200" inputmode="numeric"><span class="row-sum" id="sum-200">0.00 €</span></div>
+                <div class="row b100"><span class="label">100 €</span><input type="text" class="c-in" data-v="100" inputmode="numeric"><span class="row-sum" id="sum-100">0.00 €</span></div>
+                <div class="row b50"><span class="label">50 €</span><input type="text" class="c-in" data-v="50" inputmode="numeric"><span class="row-sum" id="sum-50">0.00 €</span></div>
+                <div class="row b20"><span class="label">20 €</span><input type="text" class="c-in" data-v="20" inputmode="numeric"><span class="row-sum" id="sum-20">0.00 €</span></div>
+                <div class="row b10"><span class="label">10 €</span><input type="text" class="c-in" data-v="10" inputmode="numeric"><span class="row-sum" id="sum-10">0.00 €</span></div>
+                <div class="row b5"><span class="label">5 €</span><input type="text" class="c-in" data-v="5" inputmode="numeric"><span class="row-sum" id="sum-5">0.00 €</span></div>
             </div>
             <!-- Монети -->
             <div class="column">
                 <div class="col-header">Монети</div>
-                <div class="row gold"><span class="label">2 €</span><input type="text" class="c-in" data-v="2" inputmode="numeric"></div>
-                <div class="row gold"><span class="label">1 €</span><input type="text" class="c-in" data-v="1" inputmode="numeric"></div>
-                <div class="row gold"><span class="label">0.50 €</span><input type="text" class="c-in" data-v="0.5" inputmode="numeric"></div>
-                <div class="row gold"><span class="label">0.20 €</span><input type="text" class="c-in" data-v="0.2" inputmode="numeric"></div>
-                <div class="row gold"><span class="label">0.10 €</span><input type="text" class="c-in" data-v="0.1" inputmode="numeric"></div>
-                <div class="row copper"><span class="label">0.05 €</span><input type="text" class="c-in" data-v="0.05" inputmode="numeric"></div>
-                <div class="row copper"><span class="label">0.02 €</span><input type="text" class="c-in" data-v="0.02" inputmode="numeric"></div>
-                <div class="row copper"><span class="label">0.01 €</span><input type="text" class="c-in" data-v="0.01" inputmode="numeric"></div>
+                <div class="row gold"><span class="label">2 €</span><input type="text" class="c-in" data-v="2" inputmode="numeric"><span class="row-sum" id="sum-2">0.00 €</span></div>
+                <div class="row gold"><span class="label">1 €</span><input type="text" class="c-in" data-v="1" inputmode="numeric"><span class="row-sum" id="sum-1">0.00 €</span></div>
+                <div class="row gold"><span class="label">0.50 €</span><input type="text" class="c-in" data-v="0.5" inputmode="numeric"><span class="row-sum" id="sum-0.5">0.00 €</span></div>
+                <div class="row gold"><span class="label">0.20 €</span><input type="text" class="c-in" data-v="0.2" inputmode="numeric"><span class="row-sum" id="sum-0.2">0.00 €</span></div>
+                <div class="row gold"><span class="label">0.10 €</span><input type="text" class="c-in" data-v="0.1" inputmode="numeric"><span class="row-sum" id="sum-0.1">0.00 €</span></div>
+                <div class="row copper"><span class="label">0.05 €</span><input type="text" class="c-in" data-v="0.05" inputmode="numeric"><span class="row-sum" id="sum-0.05">0.00 €</span></div>
+                <div class="row copper"><span class="label">0.02 €</span><input type="text" class="c-in" data-v="0.02" inputmode="numeric"><span class="row-sum" id="sum-0.02">0.00 €</span></div>
+                <div class="row copper"><span class="label">0.01 €</span><input type="text" class="c-in" data-v="0.01" inputmode="numeric"><span class="row-sum" id="sum-0.01">0.00 €</span></div>
             </div>
             <!-- Корекции -->
             <div class="column right-panel">
@@ -417,6 +430,7 @@
                 <div class="extra-box"><span class="special-label" style="color:#16a34a">Плюс (+):</span><input type="text" id="plus-in" class="full-in" inputmode="decimal"></div>
                 <div class="extra-box"><span class="special-label" style="color:#dc2626">Минус (-):</span><input type="text" id="minus-in" class="full-in" inputmode="decimal"></div>
                 <div class="extra-box"><span class="special-label" style="color:#6366f1">POS (Плащания с карта):</span><input type="text" id="pos-in" class="full-in" inputmode="decimal"></div>
+                <div class="extra-box"><span class="special-label" style="color:#8b5cf6">Отложено НЗОК:</span><input type="text" id="nzok-in" class="full-in" inputmode="decimal"></div>
                 <div class="extra-box"><span class="special-label" style="color:var(--accent)">X-Отчет (Без нулиране):</span><input type="text" id="reg-in" class="full-in" inputmode="decimal"></div>
                 <div class="btn-group">
                     <button class="btn btn-save" onclick="saveHistory()">ЗАПИШИ</button>
@@ -457,6 +471,7 @@
                         <th>Смяна</th>
                         <th>В брой</th>
                         <th>Карти</th>
+                        <th>НЗОК</th>
                         <th>X-Отчет</th>
                         <th>Разлика</th>
                     </tr>
@@ -487,7 +502,6 @@
     let _confirmCallback = null;
     function showConfirm(title, message, onOK) {
         _confirmCallback = onOK;
-        // textContent is XSS-safe; no HTML parsing
         document.getElementById('confirm-title').textContent   = title;
         document.getElementById('confirm-message').textContent = message;
         document.getElementById('confirm-modal').style.display  = 'block';
@@ -507,7 +521,7 @@
     // ═══════════════════════════════════════════════════════════════
     // FIX 3 – Validate structure of every record before import/use
     // ═══════════════════════════════════════════════════════════════
-    const REQUIRED_FIELDS = ['time','operator','shift','cash','pos','reg','diff'];
+    const REQUIRED_FIELDS = ['time','operator','shift','cash','pos','nzok','reg','diff'];
     function isValidRecord(h) {
         if (typeof h !== 'object' || h === null) return false;
         for (const f of REQUIRED_FIELDS) {
@@ -523,9 +537,9 @@
             shift:      escapeHTML(h.shift).substring(0, 20),
             cash:       escapeHTML(h.cash).substring(0, 30),
             pos:        escapeHTML(h.pos).substring(0, 20),
+            nzok:       escapeHTML(h.nzok).substring(0, 20),
             reg:        escapeHTML(h.reg).substring(0, 20),
             diff:       escapeHTML(h.diff).substring(0, 30),
-            // FIX 6: keep numeric diff for reliable sign checks
             diffValue:  typeof h.diffValue === 'number' ? h.diffValue : 0
         };
     }
@@ -575,7 +589,6 @@
         window.scrollTo(0, window.pageYOffset > 300 ? 0 : document.body.scrollHeight);
     }
 
-    // FIX 4 – addEventListener instead of window.onscroll / window.onload
     window.addEventListener('scroll', function () {
         const isDown = window.pageYOffset > 300;
         document.getElementById('svgDown').style.display = isDown ? 'none'  : 'block';
@@ -622,6 +635,22 @@
     }
 
     // ═══════════════════════════════════════════════════════════════
+    // Update row sums for each denomination
+    // ═══════════════════════════════════════════════════════════════
+    function updateRowSums() {
+        document.querySelectorAll('.row').forEach(row => {
+            const input = row.querySelector('.c-in');
+            const sumSpan = row.querySelector('.row-sum');
+            if (input && sumSpan) {
+                const qty = parseInt(input.value) || 0;
+                const value = parseFloat(input.dataset.v) || 0;
+                const sum = qty * value;
+                sumSpan.textContent = sum.toFixed(2) + ' €';
+            }
+        });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
     // FIX 5 – Integer-safe floating-point accumulation
     // ═══════════════════════════════════════════════════════════════
     function runCalc() {
@@ -632,13 +661,13 @@
         });
         const cash = cashCents / 100;
 
-        const p   = parseFloat(document.getElementById('plus-in').value.replace(',', '.'))  || 0;
-        const m   = parseFloat(document.getElementById('minus-in').value.replace(',', '.')) || 0;
-        const pos = parseFloat(document.getElementById('pos-in').value.replace(',', '.'))   || 0;
-        const reg = parseFloat(document.getElementById('reg-in').value.replace(',', '.'))   || 0;
+        const p    = parseFloat(document.getElementById('plus-in').value.replace(',', '.'))  || 0;
+        const m    = parseFloat(document.getElementById('minus-in').value.replace(',', '.')) || 0;
+        const pos  = parseFloat(document.getElementById('pos-in').value.replace(',', '.'))   || 0;
+        const nzok = parseFloat(document.getElementById('nzok-in').value.replace(',', '.'))  || 0;
+        const reg  = parseFloat(document.getElementById('reg-in').value.replace(',', '.'))   || 0;
 
-        const dayTotal = Math.round((cash - p + m + pos) * 100) / 100;
-        // FIX 6 – store diff as a number; format separately for display
+        const dayTotal = Math.round((cash - p + m + pos + nzok) * 100) / 100;
         const diff     = Math.round((dayTotal - reg) * 100) / 100;
 
         document.getElementById('total-cash').textContent = cash.toFixed(2) + ' €';
@@ -646,6 +675,8 @@
         const dEl = document.getElementById('diff-display');
         dEl.textContent = (diff > 0 ? '+' : '') + diff.toFixed(2) + ' €';
         dEl.className   = diff > 0 ? 'res-val diff-pos' : diff < 0 ? 'res-val diff-neg' : 'res-val';
+        
+        updateRowSums();
     }
 
     function getCurrentShift() {
@@ -667,6 +698,7 @@
             shift:      shift,
             cash:       document.getElementById('total-cash').textContent,
             pos:        document.getElementById('pos-in').value || '0.00',
+            nzok:       document.getElementById('nzok-in').value || '0.00',
             reg:        document.getElementById('reg-in').value || '0.00',
             diff:       diffText,
             diffValue:  diffVal
@@ -681,7 +713,7 @@
     }
 
     function showToast(msg) {
-        toast.textContent = msg;   // textContent = XSS-safe
+        toast.textContent = msg;
         toast.style.display = 'block';
         setTimeout(() => { toast.style.display = 'none'; }, 1800);
     }
@@ -711,7 +743,6 @@
                 if (!Array.isArray(imported)) throw new Error("Невалиден формат");
                 if (imported.length === 0) { showToast("📭 Файлът е празен!"); return; }
 
-                // FIX 3: validate + sanitize every record
                 const valid = imported.filter(isValidRecord).map(sanitizeRecord);
                 if (valid.length === 0) { showToast("⚠️ Нито един валиден запис!"); return; }
 
@@ -732,7 +763,6 @@
         event.target.value = '';
     }
 
-    // FIX 1: All fields escaped before innerHTML insertion
     function loadHistory() {
         const history = JSON.parse(localStorage.getItem('cashHistory') || '[]');
         let html = '';
@@ -752,6 +782,7 @@
                     <td>${escapeHTML(h.shift || 'Първа')}</td>
                     <td>${escapeHTML(h.cash)}</td>
                     <td>${escapeHTML(h.pos)} €</td>
+                    <td>${escapeHTML(h.nzok || '0.00')} €</td>
                     <td>${escapeHTML(h.reg)} €</td>
                     <td class="${diffClass}">${escapeHTML(h.diff)}</td>
                 </tr>`;
@@ -806,12 +837,11 @@
                 localStorage.removeItem('cashHistory');
                 selectedRows.clear();
                 loadHistory();
-                showToast(`📦 Архивирано! 🗑 Историята е изтрита.`);
+                showToast(`📦 Архивиран! 🗑 Историята е изтрита.`);
             }, 100);
         });
     }
 
-    // FIX 1+2: printHistory uses escapeHTML for all data; no raw interpolation
     function printHistory() {
         const history = JSON.parse(localStorage.getItem('cashHistory') || '[]');
         if (history.length === 0) { showToast("Няма история за печат!"); return; }
@@ -826,6 +856,7 @@
                 <td><span class="sb">${escapeHTML(h.shift||'Първа')}</span></td>
                 <td>${escapeHTML(h.cash)}</td>
                 <td>${escapeHTML(h.pos)} €</td>
+                <td>${escapeHTML(h.nzok || '0.00')} €</td>
                 <td>${escapeHTML(h.reg)} €</td>
                 <td class="${dc}">${escapeHTML(h.diff)}</td>
             </tr>`;
@@ -855,7 +886,7 @@
         <p><strong>Общо записа:</strong> ${history.length}</p>
         <table><thead><tr>
             <th>Дата/Час</th><th>Касиер</th><th>Смяна</th>
-            <th>В брой</th><th>Карти</th><th>X-Отчет</th><th>Разлика</th>
+            <th>В брой</th><th>Карти</th><th>НЗОК</th><th>X-Отчет</th><th>Разлика</th>
         </tr></thead><tbody>${rows}</tbody></table>
         <div class="footer">
             <p>────────────────────────────────</p>
@@ -916,7 +947,6 @@
         });
     });
 
-    // FIX 4: window.addEventListener instead of window.onload
     window.addEventListener('load', () => {
         loadHistory();
         operatorInput.focus();
@@ -927,8 +957,8 @@
             localStorage.setItem('lastOperator', this.value.substring(0, 50));
         });
         updateDeleteButton();
+        runCalc();
     });
 </script>
 </body>
 </html>
-
